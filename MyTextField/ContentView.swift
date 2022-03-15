@@ -10,11 +10,20 @@ import SwiftUI
 struct ContentView: View {
     @State var username: String = ""
     @State var password: String = ""
+    @State var isSearched: Bool = false
     
     var body: some View {
-        VStack(alignment: .leading, spacing : 10) {
+        VStack(alignment: .center, spacing : 10) {
             HStack {
-                TextField("아이디를 입력하세요", text: $username)
+                TextField("아이디를 입력하세요", text: $username) {
+                    if $0 == true {
+                        print("활성화")
+                        self.isSearched = true
+                    } else {
+                        print("비활성화")
+                        self.isSearched = false
+                    }
+                }
                     .textFieldStyle(.roundedBorder)
                     .autocapitalization(.none) // first char lower
                     .disableAutocorrection(true) // disable autocorrect
@@ -42,13 +51,24 @@ struct ContentView: View {
                 }
             }
             Text("password: \(self.password)")
+            Button(action: {
+                print("zzz")
+                UIApplication.shared.dismissKeyboard()
+            }) {
+                Image(systemName: "cursorarrow.click")
+                    .font(.system(size: 40))
+            }
         }
         .padding()
         .background(Color.green)
         .cornerRadius(20)
     }
 }
-
+extension UIApplication { // 비활성화 (return Key)
+    func dismissKeyboard() {
+        sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
